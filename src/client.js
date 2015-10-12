@@ -10,7 +10,8 @@ var Client = function (options) {
 };
 
 Client.prototype.CLIENT_DEFAULTS = {
-  'server': 'http://localhost:3000'
+  'server': 'http://localhost:3000',
+  'forceNew': true
 };
 
 Client.prototype.setOptions = function (options) {

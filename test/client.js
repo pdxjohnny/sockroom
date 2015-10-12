@@ -36,6 +36,7 @@ describe('Client', function() {
         };
         var client = new sockroom.Client(options);
         client.connect().then(function (error) {
+          client.socket.emit('disconnect');
           server.close();
           done();
         }).fail(done);
