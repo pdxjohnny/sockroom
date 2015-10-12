@@ -1,8 +1,10 @@
+var q = require('q');
 var extend = require('extend');
 var socketioClient = require('socket.io-client');
 
 var Client = function (options) {
   this.options = false;
+  this.socket = false;
   this.setOptions(options);
   return this;
 };
@@ -24,17 +26,27 @@ Client.prototype.setOptions = function (options) {
 
 Client.prototype.connect = function (options) {
   this.setOptions(options);
-  var deferred = Q.defer();
-  var socket = socketioClient(this.options.server);
-  socket.on('connect', function() {
-    var newRoom = String(Math.random());
-    socket.on(newRoom, function (data) {
-      console.log('Got my', data);
-    });
-    socket.emit('event', {
-      event: newRoom
-    });
+  var deferred = q.defer();
+  this.socket = socketioClient(this.options.server, this.options);
+  this.socket.on('connect_error', function(error) {
+    deferred.reject(error);
   });
+  this.socket.on('connect', function(data) {
+    deferred.resolve();
+  });
+  return deferred.promise;
+};
+
+Client.prototype.newRoom = function (options) {
+  this.setOptions(options);
+  var roomName = String(Math.random());
+  this.socket.on(roomName, function (data) {
+    console.log('Room', roomName, 'received', data);
+  });
+  this.socket.emit('event', {
+    event: roomName
+  });
+  return roomName;
 };
 
 module.exports = Client;
