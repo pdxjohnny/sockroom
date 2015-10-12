@@ -43,8 +43,8 @@ Client.prototype.newRoom = function (options) {
   this.socket.on(roomName, function (data) {
     console.log('Room', roomName, 'received', data);
   });
-  this.socket.emit('event', {
-    event: roomName
+  this.socket.emit('join', {
+    room: roomName
   });
   return roomName;
 };

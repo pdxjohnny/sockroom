@@ -1,8 +1,12 @@
 var ioUnbound = require('socket.io');
 
-function bindToServer(server) {
+function bindHelper(httpServer) {
+  return new bindToServer(httpServer);
+}
+
+function bindToServer(httpServer) {
   this.rooms = {};
-  this.io = ioUnbound(server);
+  this.io = ioUnbound(httpServer);
   this.io.on('connection', function(socket) {
     // console.log(process.memoryUsage());
     // Create a name for the client
@@ -25,7 +29,8 @@ function bindToServer(server) {
     }.bind(this));
     // Delete on disconnect
     socket.on('disconnect', function(data) {
-      this.deleteClient(socket)
+      console.log(this);
+      this.deleteClient(socket);
       // console.log(process.memoryUsage());
     }.bind(this));
   }.bind(this));
@@ -81,4 +86,4 @@ bindToServer.prototype.sendToAllInRoom = function (room) {
   return sendToAll.bind(this);
 };
 
-module.exports = bindToServer;
+module.exports = bindHelper;
