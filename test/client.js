@@ -2,25 +2,25 @@ var http = require('http');
 var assert = require("assert");
 var socketio = require('socket.io');
 
-var Client = require('..').Client;
+var sockroom = require('..');
 
 describe('Client', function() {
   describe('#setOptions()', function () {
     it('should return defaults when none given', function () {
-      var client = new Client();
+      var client = new sockroom.Client();
       assert.deepEqual(client.options, client.CLIENT_DEFAULTS);
     });
     it('should incoperate new options when given', function () {
       var options = {
         'something': 'test'
       };
-      var client = new Client(options);
+      var client = new sockroom.Client(options);
       assert(client.options.something);
     });
   });
   describe('#connect()', function () {
     it('should fail with no server', function (done) {
-      var client = new Client();
+      var client = new sockroom.Client();
       client.connect()
       .then(done)
       .fail(function (error) {
@@ -34,7 +34,7 @@ describe('Client', function() {
         var options = {
           'server': 'http://localhost:' + server.address().port
         };
-        var client = new Client(options);
+        var client = new sockroom.Client(options);
         client.connect().then(function (error) {
           server.close();
           done();
