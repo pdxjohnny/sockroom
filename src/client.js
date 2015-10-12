@@ -1,22 +1,22 @@
 var extend = require('extend');
 var socketioClient = require('socket.io-client');
 
-var CLIENT_DEFAULTS = {
-  'server': 'http://localhost:3000'
-};
-
 var Client = function (options) {
   this.options = false;
   this.setOptions(options);
   return this;
-}
+};
+
+Client.prototype.CLIENT_DEFAULTS = {
+  'server': 'http://localhost:3000'
+};
 
 Client.prototype.setOptions = function (options) {
   if (typeof options !== 'object') {
     options = {};
   }
   if (typeof this.options !== 'object') {
-    this.options = extend(true, CLIENT_DEFAULTS, options);
+    this.options = extend(true, this.CLIENT_DEFAULTS, options);
   } else {
     this.options = extend(true, this.options, options);
   }
@@ -36,3 +36,5 @@ Client.prototype.connect = function (options) {
     });
   });
 };
+
+module.exports = Client;
