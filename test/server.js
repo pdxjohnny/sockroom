@@ -26,7 +26,7 @@ describe('Server', function() {
         var url = 'http://localhost:' + httpServer.address().port;
         var client = socketioClient(url, CLIENT_DEFAULTS);
         client.on('connect', function (data) {
-          client.emit('disconnect');
+          client.disconnect();
           httpServer.close();
           done();
         });
@@ -42,7 +42,7 @@ describe('Server', function() {
         var url = 'http://localhost:' + httpServer.address().port;
         var client = socketioClient(url, CLIENT_DEFAULTS);
         client.on('name', function (data) {
-          client.emit('disconnect');
+          client.disconnect();
           httpServer.close();
           done();
         });
@@ -63,7 +63,7 @@ describe('Server', function() {
         });
         client.on('created', function (data) {
           if (data === roomName) {
-            client.emit('disconnect');
+            client.disconnect();
             httpServer.close();
             done();
           }
@@ -89,11 +89,11 @@ describe('Server', function() {
             room: roomName
           });
           client.on(roomName, function (data) {
+            client.disconnect();
             if (data === sendMessage) {
               messagesRecevied++;
             }
             if (messagesRecevied >= messagesNeeded) {
-              client.emit('disconnect');
               httpServer.close();
               done();
             }
